@@ -19,3 +19,27 @@ Key relationships:
 - A Project can have one Estimate (1 to 0..1 relationship)
 
 The diagram also includes enumerations for ProjectStatus (IN_PROGRESS, COMPLETED, CANCELLED) and ComponentType (MATERIAL, LABOR).
+
+
+## Database Schema
+
+The `schema.sql` file contains the SQL statements necessary to set up the database schema for the BatiCuisine project. This file includes the definitions of tables, relationships, and any initial data required for the application.
+
+### File: `schema.sql`
+
+**Purpose:**
+- Creates tables for `Client`, `Project`, `Component`, `Material`, `WorkForce`, and `Estimate`.
+- Defines primary and foreign keys to establish relationships between tables.
+- Initializes default values and constraints where applicable.
+
+**Instructions:**
+1. **Create the Database:**
+    - Ensure you have a database system installed PostgreSQL.
+    - Create a new database for the BatiCuisine project.
+
+2. **Run the SQL Script:**
+    - Open your database management tool or command line interface.
+    - Execute the `schema.sql` script to set up the database schema.
+
+   ```bash
+     psql -U [username] -d [database_name] -f schema.sql
