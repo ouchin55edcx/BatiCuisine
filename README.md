@@ -42,4 +42,4 @@ The `schema.sql` file contains the SQL statements necessary to set up the databa
     - Execute the `schema.sql` script to set up the database schema.
 
    ```bash
-   mysql -u [username] -p [database_name] < schema.sql
+     psql -U [username] -d [database_name] -f schema.sql
