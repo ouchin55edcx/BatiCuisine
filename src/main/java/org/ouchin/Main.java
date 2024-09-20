@@ -14,7 +14,6 @@ public class Main {
         ClientService clientService = new ClientService(clientRepository);
         ClientUi clientUi = new ClientUi(clientService);
 
-
         ClientMenu menu = new ClientMenu(clientUi);
         menu.show();
     }

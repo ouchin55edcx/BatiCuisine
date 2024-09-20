@@ -3,6 +3,7 @@ package org.ouchin.services;
 import org.ouchin.models.Client;
 import org.ouchin.repositories.ClientRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class ClientService {
@@ -17,5 +18,9 @@ public class ClientService {
         UUID id = UUID.randomUUID();
         Client newClient = new Client(id, fullName, address, phoneNumber, isProfessional);
         clientRepository.add(newClient);
+    }
+
+    public Optional<Client> searchByName(String fullName){
+        return clientRepository.findByName(fullName);
     }
 }
