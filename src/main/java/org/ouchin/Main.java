@@ -1,25 +1,21 @@
 package org.ouchin;
 
-import org.ouchin.config.DatabaseConfig;
+import org.ouchin.presetations.ClientUi;
+import org.ouchin.presetations.menus.ClientMenu;
+import org.ouchin.repositories.ClientRepository;
+import org.ouchin.repositories.Impl.ClientRepositoryImpl;
+import org.ouchin.services.ClientService;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
 
-        DatabaseConfig databaseConfig = DatabaseConfig.getInstance();
+        ClientRepository clientRepository = new ClientRepositoryImpl();
+        ClientService clientService = new ClientService(clientRepository);
+        ClientUi clientUi = new ClientUi(clientService);
 
-        Connection connection = databaseConfig.getConnection();
 
-        try {
-            if (connection != null && !connection.isClosed()) {
-                System.out.println("Connected to the database successfully!");
-            } else {
-                System.out.println("Failed to connect to the database.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while checking connection: " + e.getMessage());
-        }
+        ClientMenu menu = new ClientMenu(clientUi);
+        menu.show();
     }
 }
