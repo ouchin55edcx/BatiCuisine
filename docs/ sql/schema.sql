@@ -69,3 +69,7 @@ CREATE TABLE Estimate (
     projectId UUID,
     FOREIGN KEY (projectId) REFERENCES Project(id)
 );
+
+-------------------------------- update full name in client to be unique --------------------------
+
+ALTER TABLE client ADD CONSTRAINT unique_fullname UNIQUE (fullname);
