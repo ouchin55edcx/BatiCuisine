@@ -4,10 +4,9 @@ import org.ouchin.config.DatabaseConfig;
 import org.ouchin.models.Client;
 import org.ouchin.repositories.ClientRepository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ClientRepositoryImpl implements ClientRepository {
 
@@ -33,5 +32,28 @@ public class ClientRepositoryImpl implements ClientRepository {
         }
 
 
+    }
+
+    @Override
+    public Optional<Client> findByName(String fullName) {
+        String query = "SELECT * FROM "+tableName+" WHERE fullname LIKE ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)){
+            pstmt.setString(1, "%" +fullName+ "%");
+            ResultSet resultSet = pstmt.executeQuery();
+            if(resultSet.next()){
+                Client client = new Client(
+                        UUID.fromString(resultSet.getString("id")),
+                        resultSet.getString("fullname"),
+                        resultSet.getString("address"),
+                        resultSet.getString("phonenumber"),
+                        resultSet.getBoolean("isprofessional")
+                );
+                return Optional.of(client);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
     }
 }
