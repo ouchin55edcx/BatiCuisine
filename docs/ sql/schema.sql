@@ -16,11 +16,11 @@ CREATE TABLE Client (
 
 CREATE TABLE Project (
     id UUID PRIMARY KEY,
-    projectName VARCHAR(255) NOT NULL,
-    profitMargin FLOAT,
+    project_name VARCHAR(255) NOT NULL,
+    profit_margin FLOAT,
     status project_status,
-    clientId UUID,
-    FOREIGN KEY (clientId) REFERENCES Client(id)
+    client_id UUID,
+    FOREIGN KEY (client_id) REFERENCES Client(id)
 );
 
 -----------------------------------Component -----------------------------------------
