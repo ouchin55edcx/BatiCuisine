@@ -6,21 +6,22 @@ import java.util.UUID;
 
 public class Project {
 
-    private UUID id ;
-    private UUID clientId ;
-    private String projectName ;
-    private Float profitMargin ;
-    private ProjectStatus status ;
+    private UUID id;
+    private String projectName;
+    private Float profitMargin;
+    private ProjectStatus status;
+    private UUID clientId;
 
-    public Project(UUID id, UUID clientId, String projectName, Float profitMargin, ProjectStatus status) {
+
+    public Project() {
+    }
+
+    public Project(UUID id, String projectName, Float profitMargin, ProjectStatus status, UUID clientId) {
         this.id = id;
-        this.clientId = clientId;
         this.projectName = projectName;
         this.profitMargin = profitMargin;
         this.status = status;
-    }
-
-    public Project() {
+        this.clientId = clientId;
     }
 
     public UUID getId() {
@@ -29,14 +30,6 @@ public class Project {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(UUID clientId) {
-        this.clientId = clientId;
     }
 
     public String getProjectName() {
@@ -63,17 +56,24 @@ public class Project {
         this.status = status;
     }
 
+    public UUID getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(UUID clientId) {
+        this.clientId = clientId;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
                 "id=" + id +
-                ", clientId=" + clientId +
                 ", projectName='" + projectName + '\'' +
                 ", profitMargin=" + profitMargin +
                 ", status=" + status +
+                ", clientId=" + clientId +
                 '}';
     }
-
 
 
 
