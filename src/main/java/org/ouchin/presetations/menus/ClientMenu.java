@@ -26,6 +26,8 @@
                 switch (choice) {
                     case 1 -> createOrSearchClientAndProject();
                     case 2 -> searchAndHandleProjectForClient();
+                    case 3 -> projectUi.displayAllProjects();
+                    case 4 -> displayProjectsForSpecificClient();
                     case 0 -> exit = true;
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
@@ -71,9 +73,13 @@
         private void printMenuOptions() {
             System.out.println("===== Client Management Menu =====");
             System.out.println("1. Create Project for Client");
+            System.out.println("2. Search for Client and Handle Project");
+            System.out.println("3. Display All Projects");
+            System.out.println("4. Display Projects for Specific Client");
             System.out.println("0. Exit");
             System.out.println("Please choose an option:");
         }
+
 
         private int getChoice() {
             while (true) {
@@ -82,6 +88,16 @@
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a valid number.");
                 }
+            }
+        }
+
+        private void displayProjectsForSpecificClient() {
+            Optional<Client> clientOptional = clientUi.searchByName();
+            if (clientOptional.isPresent()) {
+                Client client = clientOptional.get();
+                projectUi.displayProjectsForClient(client.getId());
+            } else {
+                System.out.println("Client not found.");
             }
         }
     }

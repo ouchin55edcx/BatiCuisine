@@ -6,6 +6,7 @@ import org.ouchin.models.WorkForce;
 import org.ouchin.services.ProjectService;
 
 import java.security.KeyStore;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -51,5 +52,30 @@ public class ProjectUi {
     private Double getProfitMarginInput() {
         System.out.println("Enter the profit margin for the project:");
         return Double.parseDouble(scanner.nextLine().trim());
+    }
+
+
+    public void displayAllProjects() {
+        List<Project> projects = projectService.getAllProjects();
+        if (projects.isEmpty()) {
+            System.out.println("No projects found.");
+        } else {
+            System.out.println("All Projects:");
+            for (Project project : projects) {
+                System.out.println(project);
+            }
+        }
+    }
+
+    public void displayProjectsForClient(UUID clientId) {
+        List<Project> projects = projectService.getProjectsForClient(clientId);
+        if (projects.isEmpty()) {
+            System.out.println("No projects found for this client.");
+        } else {
+            System.out.println("Projects for client " + clientId + ":");
+            for (Project project : projects) {
+                System.out.println(project);
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@
     import org.ouchin.repositories.ProjectRepository;
 
     import java.sql.*;
+    import java.util.ArrayList;
+    import java.util.List;
     import java.util.UUID;
 
     public class ProjectRepositoryImpl implements ProjectRepository {
@@ -40,6 +42,50 @@
             }
             // TODO: replace null with optional pattern
             return null;
+        }
+
+        @Override
+        public List<Project> getAll() {
+            List<Project> projects = new ArrayList<>();
+            String query = "SELECT * FROM " + tableName;
+            try (Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(query)) {
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setId(rs.getObject("id", UUID.class));
+                    project.setProjectName(rs.getString("project_name"));
+                    project.setProfitMargin(rs.getDouble("profit_margin"));
+                    project.setStatus(ProjectStatus.valueOf(rs.getString("status")));
+                    project.setClientId(rs.getObject("client_id", UUID.class));
+                    projects.add(project);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return projects;
+        }
+
+        @Override
+        public List<Project> getByClientId(UUID clientId) {
+            List<Project> projects = new ArrayList<>();
+            String query = "SELECT * FROM " + tableName + " WHERE client_id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+                pstmt.setObject(1, clientId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        Project project = new Project();
+                        project.setId(rs.getObject("id", UUID.class));
+                        project.setProjectName(rs.getString("project_name"));
+                        project.setProfitMargin(rs.getDouble("profit_margin"));
+                        project.setStatus(ProjectStatus.valueOf(rs.getString("status")));
+                        project.setClientId(rs.getObject("client_id", UUID.class));
+                        projects.add(project);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return projects;
         }
 
     }
