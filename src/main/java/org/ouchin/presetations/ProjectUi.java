@@ -129,11 +129,37 @@ public class ProjectUi {
 
             switch (choice) {
                 case 1 -> updateProject(projects);
+                case 2 -> deleteProject(projects);
+
                 case 0 -> {
                     return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
+        }
+    }
+
+    private void deleteProject(List<Project> projects) {
+        System.out.print("Enter the ID of the project to delete: ");
+        UUID projectId = UUID.fromString(scanner.nextLine().trim());
+
+        Project projectToDelete = projects.stream()
+                .filter(p -> p.getId().equals(projectId))
+                .findFirst()
+                .orElse(null);
+
+        if (projectToDelete == null) {
+            System.out.println("Project not found.");
+            return;
+        }
+
+        System.out.print("Are you sure you want to delete this project? (y/n): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            projectService.deleteProject(projectId);
+            System.out.println("Project deleted successfully.");
+            projects.remove(projectToDelete);
+        } else {
+            System.out.println("Delete operation cancelled.");
         }
     }
 }

@@ -11,5 +11,7 @@ public interface ProjectRepository {
     List<Project> getAll();
     List<Project> getByClientId(UUID clientId);
     void update(Project project);
+    void delete(UUID projectId);
+
 
 }

@@ -102,4 +102,16 @@
             }
         }
 
+
+        @Override
+        public void delete(UUID projectId) {
+            String query = "DELETE FROM " + tableName + " WHERE id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+                pstmt.setObject(1, projectId);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
