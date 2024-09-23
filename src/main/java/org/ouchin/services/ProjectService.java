@@ -13,13 +13,11 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public void addProject(UUID clientId, String projectName, double profitMargin) {
+    public Project addProject(UUID clientId, String projectName, double profitMargin) {
         UUID id = UUID.randomUUID();
         ProjectStatus status = ProjectStatus.IN_PROGRESS;
 
         Project project = new Project(id, projectName, profitMargin, status, clientId);
-        projectRepository.add(project);
-
-        System.out.println("Project created with ID: " + id + " and status: " + status);
+        return projectRepository.add(project);
     }
 }

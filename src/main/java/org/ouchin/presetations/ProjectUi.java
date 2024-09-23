@@ -1,16 +1,24 @@
 package org.ouchin.presetations;
 
 import org.ouchin.models.Client;
+import org.ouchin.models.Project;
+import org.ouchin.models.WorkForce;
 import org.ouchin.services.ProjectService;
 
+import java.security.KeyStore;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class ProjectUi {
     private final ProjectService projectService;
+    private final MaterialUi materialUi;
+    private final WorkForceUi workForceUi;
     private final Scanner scanner = new Scanner(System.in);
 
-    public ProjectUi(ProjectService projectService) {
+    public ProjectUi(ProjectService projectService, MaterialUi materialUi, WorkForceUi workForceUi) {
         this.projectService = projectService;
+        this.materialUi = materialUi;
+        this.workForceUi = workForceUi;
     }
 
     public void createProjectForClient(Client client) {
@@ -18,7 +26,20 @@ public class ProjectUi {
 
         String projectName = getProjectNameInput();
         Double profitMargin = getProfitMarginInput();
-        projectService.addProject(client.getId(), projectName, profitMargin);
+        Project createdProject = projectService.addProject(client.getId(), projectName, profitMargin);
+
+        // System.out.println("Project created with ID: " + id + " and status: " + status);
+
+        System.out.println("Do you want to add some materiels: ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            materialUi.addMaterialsToProject(createdProject.getId());
+        }
+
+        System.out.println("Do you want to add new Workers");
+        if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            workForceUi.addWorkForceToProject(createdProject.getId());
+        }
+
         System.out.println("Project created successfully!");
     }
 
