@@ -63,8 +63,44 @@ public class ProjectUi {
             System.out.println("All Projects:");
             for (Project project : projects) {
                 System.out.println(project);
+
             }
+
         }
+
+    }
+
+
+
+
+    private void updateProject(List<Project> projects) {
+        System.out.print("Enter the ID of the project to update: ");
+        UUID projectId = UUID.fromString(scanner.nextLine().trim());
+
+        Project projectToUpdate = projects.stream()
+                .filter(p -> p.getId().equals(projectId))
+                .findFirst()
+                .orElse(null);
+
+        if (projectToUpdate == null) {
+            System.out.println("Project not found.");
+            return;
+        }
+
+        System.out.print("Enter new project name (press enter to keep current): ");
+        String newName = scanner.nextLine().trim();
+        if (!newName.isEmpty()) {
+            projectToUpdate.setProjectName(newName);
+        }
+
+        System.out.print("Enter new profit margin (press enter to keep current): ");
+        String newMargin = scanner.nextLine().trim();
+        if (!newMargin.isEmpty()) {
+            projectToUpdate.setProfitMargin(Double.parseDouble(newMargin));
+        }
+
+        projectService.updateProject(projectToUpdate);
+        System.out.println("Project updated successfully.");
     }
 
     public void displayProjectsForClient(UUID clientId) {
@@ -75,6 +111,28 @@ public class ProjectUi {
             System.out.println("Projects for client " + clientId + ":");
             for (Project project : projects) {
                 System.out.println(project);
+            }
+            handleProjectOperations(projects);
+
+        }
+    }
+
+    private void handleProjectOperations(List<Project> projects) {
+        while (true) {
+            System.out.println("\n--- Project Operations ---");
+            System.out.println("1. Update a project");
+            System.out.println("2. Delete a project");
+            System.out.println("0. Return to main menu");
+            System.out.print("Enter your choice: ");
+
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+
+            switch (choice) {
+                case 1 -> updateProject(projects);
+                case 0 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }

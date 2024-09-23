@@ -88,4 +88,18 @@
             return projects;
         }
 
+        @Override
+        public void update(Project project) {
+            String query = "UPDATE " + tableName + " SET project_name = ?, profit_margin = ?, status = ? WHERE id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+                pstmt.setString(1, project.getProjectName());
+                pstmt.setDouble(2, project.getProfitMargin());
+                pstmt.setObject(3, project.getStatus().name(), Types.OTHER);
+                pstmt.setObject(4, project.getId());
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }

@@ -29,4 +29,8 @@ public class   ProjectService {
     public List<Project> getProjectsForClient(UUID clientId) {
         return projectRepository.getByClientId(clientId);
     }
+
+    public void updateProject(Project project) {
+        projectRepository.update(project);
+    }
 }

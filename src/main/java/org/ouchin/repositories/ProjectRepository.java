@@ -10,5 +10,6 @@ public interface ProjectRepository {
     Project add(Project project);
     List<Project> getAll();
     List<Project> getByClientId(UUID clientId);
+    void update(Project project);
 
 }
