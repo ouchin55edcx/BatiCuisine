@@ -44,7 +44,7 @@ CREATE TABLE material (
     transport_cost FLOAT NOT NULL,
     quality_coefficient FLOAT NOT NULL,
     FOREIGN KEY (id) REFERENCES component(id)
-);
+) inherits;
 
 
 -----------------------------------WorkForce -----------------------------------------
