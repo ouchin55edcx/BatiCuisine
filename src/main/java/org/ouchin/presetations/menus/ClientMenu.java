@@ -1,45 +1,82 @@
 package org.ouchin.presetations.menus;
 
+import org.ouchin.models.Client;
 import org.ouchin.presetations.ClientUi;
+import org.ouchin.presetations.ProjectUi;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class ClientMenu {
-
     private final ClientUi clientUi;
+    private final ProjectUi projectUi;
     private final Scanner scanner = new Scanner(System.in);
 
-    public ClientMenu(ClientUi clientUi) {
+    public ClientMenu(ClientUi clientUi, ProjectUi projectUi) {
         this.clientUi = clientUi;
+        this.projectUi = projectUi;
     }
 
-    public void show(){
+    public void show() {
         boolean exit = false;
-        while (!exit){
+        while (!exit) {
             printMenuOptions();
             int choice = getChoice();
 
-            switch (choice){
-                case 1 ->clientUi.add();
-                case 2 ->clientUi.searchByName();
+            switch (choice) {
+                case 1 -> createOrSearchClientAndProject();
+                case 2 -> searchAndHandleProjectForClient();
                 case 0 -> exit = true;
                 default -> System.out.println("Invalid choice. Please try again.");
-
             }
         }
         System.out.println("Exiting client management.");
     }
 
-    private void printMenuOptions(){
+    private void searchAndHandleProjectForClient() {
+        Optional<Client> clientOptional = clientUi.searchByName();
+        if (clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+            System.out.println("Would you like to continue with this client to create a project? (y/n)");
+            if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+                projectUi.createProjectForClient(client);
+            }
+        } else {
+            System.out.println("Client not found.");
+        }
+    }
+
+    private void createOrSearchClientAndProject() {
+        System.out.println("1. Search for an existing client");
+        System.out.println("2. Add a new client");
+        int clientChoice = getChoice();
+
+        Optional<Client> clientOptional;
+        if (clientChoice == 1) {
+            clientOptional = clientUi.searchByName();
+        } else {
+            clientUi.add();
+            clientOptional = clientUi.searchByName();
+        }
+
+        if (clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+            System.out.println("Would you like to continue with this client? (y/n)");
+            if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+                projectUi.createProjectForClient(client);
+            }
+        }
+    }
+
+    private void printMenuOptions() {
         System.out.println("===== Client Management Menu =====");
-        System.out.println("1. Add New Client");
-        System.out.println("2. Search Client");
+        System.out.println("1. Create Project for Client");
         System.out.println("0. Exit");
         System.out.println("Please choose an option:");
     }
 
-    private int getChoice(){
-        while (true){
+    private int getChoice() {
+        while (true) {
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {

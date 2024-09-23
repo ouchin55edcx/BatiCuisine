@@ -1,22 +1,25 @@
 package org.ouchin.services;
 
-import org.ouchin.enums.ProjectStatus;
-import org.ouchin.models.Client;
 import org.ouchin.models.Project;
-import org.ouchin.repositories.ClientRepository;
+import org.ouchin.enums.ProjectStatus;
 import org.ouchin.repositories.ProjectRepository;
 
 import java.util.UUID;
 
 public class ProjectService {
-
     private final ProjectRepository projectRepository;
-    private final ClientRepository clientRepository;
 
-    public ProjectService(ProjectRepository projectRepository, ClientRepository clientRepository) {
+    public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
-        this.clientRepository = clientRepository;
     }
 
+    public void addProject(UUID clientId, String projectName, double profitMargin) {
+        UUID id = UUID.randomUUID();
+        ProjectStatus status = ProjectStatus.IN_PROGRESS;
 
+        Project project = new Project(id, projectName, profitMargin, status, clientId);
+        projectRepository.add(project);
+
+        System.out.println("Project created with ID: " + id + " and status: " + status);
+    }
 }

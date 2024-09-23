@@ -8,7 +8,7 @@ public class Project {
 
     private UUID id;
     private String projectName;
-    private Float profitMargin;
+    private Double profitMargin;
     private ProjectStatus status;
     private UUID clientId;
 
@@ -16,7 +16,7 @@ public class Project {
     public Project() {
     }
 
-    public Project(UUID id, String projectName, Float profitMargin, ProjectStatus status, UUID clientId) {
+    public Project(UUID id, String projectName, Double profitMargin, ProjectStatus status, UUID clientId) {
         this.id = id;
         this.projectName = projectName;
         this.profitMargin = profitMargin;
@@ -40,11 +40,11 @@ public class Project {
         this.projectName = projectName;
     }
 
-    public Float getProfitMargin() {
+    public Double getProfitMargin() {
         return profitMargin;
     }
 
-    public void setProfitMargin(Float profitMargin) {
+    public void setProfitMargin(Double profitMargin) {
         this.profitMargin = profitMargin;
     }
 
