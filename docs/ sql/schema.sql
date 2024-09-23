@@ -25,37 +25,38 @@ CREATE TABLE Project (
 
 -----------------------------------Component -----------------------------------------
 
-CREATE TABLE Component (
+CREATE TABLE component (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    type component_type NOT NULL,
-    vatRate FLOAT,
-    projectId UUID,
-    FOREIGN KEY (projectId) REFERENCES Project(id)
+    type VARCHAR(50) NOT NULL CHECK (type IN ('MATERIAL', 'LABOR')),
+    vat_rate FLOAT NOT NULL,
+    project_id UUID NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES project(id)
 );
+
 
 -----------------------------------Material -----------------------------------------
 
-CREATE TABLE Material (
+CREATE TABLE material (
     id UUID PRIMARY KEY,
-    unitCost REAL,
-    quantity INTEGER,
-    transportCost REAL,
-    qualityCoefficient REAL,
-    componentId UUID,
-    FOREIGN KEY (componentId) REFERENCES Component(id)
+    unit_cost FLOAT NOT NULL,
+    quantity INTEGER NOT NULL,
+    transport_cost FLOAT NOT NULL,
+    quality_coefficient FLOAT NOT NULL,
+    FOREIGN KEY (id) REFERENCES component(id)
 );
+
 
 -----------------------------------WorkForce -----------------------------------------
 
-CREATE TABLE WorkForce (
+CREATE TABLE workforce (
     id UUID PRIMARY KEY,
-    hourlyRate REAL,
-    workHours REAL,
-    workerProductivity REAL,
-    componentId UUID,
-    FOREIGN KEY (componentId) REFERENCES Component(id)
+    hourly_rate FLOAT NOT NULL,
+    work_hours FLOAT NOT NULL,
+    worker_productivity FLOAT NOT NULL,
+    FOREIGN KEY (id) REFERENCES component(id)
 );
+
 
 -----------------------------------Estimate -----------------------------------------
 
