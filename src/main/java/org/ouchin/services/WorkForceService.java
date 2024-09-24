@@ -29,4 +29,8 @@ public class WorkForceService {
                 .mapToDouble(WorkForce::total)
                 .sum();
     }
+
+    public List<WorkForce> findAllByProjectId(UUID id) {
+        return workForceRepository.getWorkforceComponentsByProjectId(id);
+    }
 }

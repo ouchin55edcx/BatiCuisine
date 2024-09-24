@@ -31,4 +31,8 @@ public class MaterialService {
                 .sum();
     }
 
+    public List<Material> findAllByProjectId(UUID id) {
+        return materielRepository.getMaterialComponentsByProjectId(id);
+    }
+
 }

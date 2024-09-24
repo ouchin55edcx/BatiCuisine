@@ -31,7 +31,6 @@ public class ClientRepositoryImpl implements ClientRepository {
             throw new RuntimeException(e);
         }
 
-
     }
 
     @Override

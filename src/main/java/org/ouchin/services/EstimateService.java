@@ -1,7 +1,7 @@
 package org.ouchin.services;
 
 import org.ouchin.models.Estimate;
-import org.ouchin.presetations.EstimateRepository;
+import org.ouchin.repositories.EstimateRepository;
 
 import java.time.LocalDate;
 import java.util.UUID;

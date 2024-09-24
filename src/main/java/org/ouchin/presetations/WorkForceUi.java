@@ -4,6 +4,7 @@ import org.ouchin.enums.ComponentType;
 import org.ouchin.models.WorkForce;
 import org.ouchin.services.WorkForceService;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -51,5 +52,22 @@ public class WorkForceUi {
 
         workForceService.saveAll(workForces);
         return workForces;
+    }
+
+    public void showWorkForceByProjectId(UUID id) {
+        List<WorkForce> workForces = workForceService.findAllByProjectId(id);
+
+        System.out.println("--- Main-d'œuvre du projet ---");
+        for (WorkForce workForce : workForces) {
+            System.out.println("Nom : " + workForce.getName());
+            System.out.println("Taux horaire : " + workForce.getHourlyRate() + " €/h");
+            System.out.println("Heures travaillées : " + workForce.getWorkHours() + " h");
+            System.out.println("Productivité : " + workForce.getWorkerProductivity());
+            System.out.println("Coût total : " + (workForce.getHourlyRate() * workForce.getWorkHours() * workForce.getWorkerProductivity()) + " €");
+            System.out.println();
+        }
+
+        double totalLaborCost = workForceService.calculateTotalOfWorkforce(id);
+        System.out.println("Total de la main-d'œuvre : " + totalLaborCost + " €");
     }
 }

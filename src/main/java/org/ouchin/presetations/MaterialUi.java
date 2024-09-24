@@ -58,5 +58,19 @@ public class MaterialUi {
         return materials;
     }
 
+    public void showMaterialsByProjectId(UUID id) {
+        List<Material> materials = materialService.findAllByProjectId(id);
+
+        System.out.println("--- Matériaux du projet ---");
+        for (Material material : materials) {
+            double materialCost = material.getUnitCost() * material.getQuantity() * material.getQualityCoefficient() + material.getTransportCost();
+            System.out.printf("- %s : %.2f € (quantité : %d, coût unitaire : %.2f €/unité, qualité : %.1f, transport : %.2f €)\n",
+                    material.getName(), materialCost, material.getQuantity(), material.getUnitCost(), material.getQualityCoefficient(), material.getTransportCost());
+        }
+
+        double totalMaterialsCost = materialService.calculateTotalOfMaterials(id);
+        System.out.printf("**Coût total des matériaux : %.2f €**\n", totalMaterialsCost);
+    }
+
 
 }

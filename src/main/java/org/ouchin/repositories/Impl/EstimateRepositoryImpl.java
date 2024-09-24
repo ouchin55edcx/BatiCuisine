@@ -2,7 +2,7 @@ package org.ouchin.repositories.Impl;
 
 import org.ouchin.config.DatabaseConfig;
 import org.ouchin.models.Estimate;
-import org.ouchin.presetations.EstimateRepository;
+import org.ouchin.repositories.EstimateRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
