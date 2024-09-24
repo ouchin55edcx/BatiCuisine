@@ -1,15 +1,9 @@
 package org.ouchin;
 
-import org.ouchin.presetations.ClientUi;
-import org.ouchin.presetations.MaterialUi;
-import org.ouchin.presetations.ProjectUi;
-import org.ouchin.presetations.WorkForceUi;
+import org.ouchin.presetations.*;
 import org.ouchin.presetations.menus.ClientMenu;
 import org.ouchin.repositories.*;
-import org.ouchin.repositories.Impl.ClientRepositoryImpl;
-import org.ouchin.repositories.Impl.MaterielRepositoryImpl;
-import org.ouchin.repositories.Impl.ProjectRepositoryImpl;
-import org.ouchin.repositories.Impl.WorkForceRepositoryImpl;
+import org.ouchin.repositories.Impl.*;
 import org.ouchin.services.*;
 
 public class Main {
@@ -19,18 +13,20 @@ public class Main {
         ProjectRepository projectRepository = new ProjectRepositoryImpl();
         MaterielRepository materialRepository = new MaterielRepositoryImpl();
         WorkForceRepository workForceRepository = new WorkForceRepositoryImpl();
+        EstimateRepository estimateRepository = new EstimateRepositoryImpl();
 
         // Services
         ClientService clientService = new ClientService(clientRepository);
-        ProjectService projectService = new ProjectService(projectRepository);
-        MaterialService materialService = new MaterialService(materialRepository);
-        WorkForceService workForceService = new WorkForceService(workForceRepository);
+        MaterialService materialService = new MaterialService(materialRepository, projectRepository);
+        WorkForceService workForceService = new WorkForceService(workForceRepository, projectRepository);
+        ProjectService projectService = new ProjectService(projectRepository, materialService, workForceService);
+        EstimateService estimateService = new EstimateService(estimateRepository);
 
         // UIs
         ClientUi clientUI = new ClientUi(clientService);
         MaterialUi materialUI = new MaterialUi(materialService);
         WorkForceUi workForceUI = new WorkForceUi(workForceService);
-        ProjectUi projectUI = new ProjectUi(projectService, materialUI, workForceUI);
+        ProjectUi projectUI = new ProjectUi(projectService, materialUI, workForceUI, estimateService);
 
         ClientMenu menu = new ClientMenu(clientUI, projectUI);
         menu.show();

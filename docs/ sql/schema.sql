@@ -61,7 +61,7 @@ CREATE TABLE workforce (
 -----------------------------------Estimate -----------------------------------------
 
 
-CREATE TABLE Estimate (
+CREATE TABLE estimate (
     id UUID PRIMARY KEY,
     estimatedAmount REAL,
     issueDate DATE,
