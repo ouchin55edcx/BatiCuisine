@@ -32,7 +32,7 @@
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
             }
-            System.out.println("Exiting client management.");
+            System.out.println("Returning to main menu.");
         }
 
         private void searchAndHandleProjectForClient() {
@@ -71,12 +71,12 @@
         }
 
         private void printMenuOptions() {
-            System.out.println("===== Client Management Menu =====");
+            System.out.println("\n===== Client Management Menu =====");
             System.out.println("1. Create Project for Client");
             System.out.println("2. Search for Client and Handle Project");
             System.out.println("3. Display All Projects");
             System.out.println("4. Display Projects for Specific Client");
-            System.out.println("0. Exit");
+            System.out.println("0. Return to Main Menu");
             System.out.println("Please choose an option:");
         }
 

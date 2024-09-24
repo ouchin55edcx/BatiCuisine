@@ -47,7 +47,11 @@ public class WorkForce extends Component {
 
 
 
+//todo : override calculate total
 
 
-
+    @Override
+    public Double total() {
+        return hourlyRate * workHours * workerProductivity;
+    }
 }

@@ -1,16 +1,17 @@
 package org.ouchin.models;
 
 import org.ouchin.enums.ComponentType;
+
 import java.util.UUID;
 
-public class Component {
+public abstract class Component {
     private UUID id;
     private String name;
     private ComponentType type;
     private double vatRate;
     private UUID projectId;
 
-    public Component(){
+    public Component() {
 
     }
 
@@ -62,4 +63,11 @@ public class Component {
     public void setProjectId(UUID projectId) {
         this.projectId = projectId;
     }
+
+    public abstract Double total();
+
+    public Double totalWithTva() {
+        return total() * (vatRate / 100);
+    }
+
 }

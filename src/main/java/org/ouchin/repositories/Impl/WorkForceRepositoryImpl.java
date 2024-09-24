@@ -1,13 +1,15 @@
 package org.ouchin.repositories.Impl;
 
 import org.ouchin.config.DatabaseConfig;
+import org.ouchin.enums.ComponentType;
+import org.ouchin.models.Material;
 import org.ouchin.models.WorkForce;
 import org.ouchin.repositories.WorkForceRepository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class WorkForceRepositoryImpl implements WorkForceRepository {
 
@@ -46,6 +48,40 @@ public class WorkForceRepositoryImpl implements WorkForceRepository {
     public List<WorkForce> saveAll(List<WorkForce> workForces) {
         for (WorkForce workForce : workForces) {
             addLabor(workForce);
+        }
+        return workForces;
+    }
+
+    @Override
+    public List<WorkForce> getWorkforceComponentsByProjectId(UUID projectId) {
+        return getWorkForceComponents(projectId);
+    }
+
+
+
+    private List<WorkForce> getWorkForceComponents(UUID projectId) {
+        List<WorkForce> workForces = new ArrayList<>();
+        String query = "SELECT * FROM " + tableName + " WHERE project_id = ? AND type = ?::component_type";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setObject(1, projectId);
+            pstmt.setObject(2, ComponentType.LABOR, Types.OTHER);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    WorkForce workForce = new WorkForce(
+                            rs.getObject("id", UUID.class),
+                            rs.getString("name"),
+                            ComponentType.LABOR,
+                            rs.getFloat("vat_rate"),
+                            rs.getObject("project_id", UUID.class),
+                            rs.getDouble("hourly_rate"),
+                            rs.getDouble("work_hours"),
+                            rs.getDouble("worker_productivity")
+                    );
+                    workForces.add(workForce);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return workForces;
     }
