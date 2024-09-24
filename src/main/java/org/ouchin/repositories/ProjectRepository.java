@@ -1,9 +1,7 @@
 package org.ouchin.repositories;
 
-import org.ouchin.models.Component;
-import org.ouchin.models.Material;
-import org.ouchin.models.Project;
-import org.ouchin.models.WorkForce;
+import org.ouchin.enums.ProjectStatus;
+import org.ouchin.models.*;
 import org.ouchin.presetations.ProjectUi;
 
 import java.util.List;
@@ -13,7 +11,6 @@ public interface ProjectRepository {
     Project add(Project project);
     List<Project> getAll();
     List<Project> getByClientId(UUID clientId);
-    void update(Project project);
+    void updateStatus(UUID projectId, ProjectStatus newStatus);
     void delete(UUID projectId);
-
 }

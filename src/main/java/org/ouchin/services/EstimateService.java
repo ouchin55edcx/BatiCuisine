@@ -25,4 +25,18 @@ public class EstimateService {
 
         estimateRepository.save(estimate);
     }
+
+    public Estimate getEstimateByProjectId(UUID projectId) {
+        return estimateRepository.findByProjectId(projectId);
+    }
+
+    public void updateEstimateAcceptance(UUID projectId, boolean isAccepted) {
+        Estimate estimate = estimateRepository.findByProjectId(projectId);
+        if (estimate != null) {
+            estimate.setAccepted(isAccepted);
+            estimateRepository.update(estimate);
+        } else {
+            System.out.println("No estimate found for the project.");
+        }
+    }
 }

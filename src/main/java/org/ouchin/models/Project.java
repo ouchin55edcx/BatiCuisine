@@ -14,6 +14,7 @@ public class Project {
     private ProjectStatus status;
     private UUID clientId;
     private List<Component> components;
+    private Estimate estimate;
 
     public Project() {
         this.components = new ArrayList<>();

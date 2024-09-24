@@ -3,10 +3,7 @@
     import org.ouchin.config.DatabaseConfig;
     import org.ouchin.enums.ComponentType;
     import org.ouchin.enums.ProjectStatus;
-    import org.ouchin.models.Component;
-    import org.ouchin.models.Material;
-    import org.ouchin.models.Project;
-    import org.ouchin.models.WorkForce;
+    import org.ouchin.models.*;
     import org.ouchin.repositories.ProjectRepository;
 
     import java.sql.*;
@@ -92,19 +89,18 @@
             return projects;
         }
 
-        @Override
-        public void update(Project project) {
-            String query = "UPDATE " + tableName + " SET project_name = ?, profit_margin = ?, status = ? WHERE id = ?";
-            try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-                pstmt.setString(1, project.getProjectName());
-                pstmt.setDouble(2, project.getProfitMargin());
-                pstmt.setObject(3, project.getStatus().name(), Types.OTHER);
-                pstmt.setObject(4, project.getId());
+        public void updateStatus(UUID projectId, ProjectStatus status) {
+            String sql = "UPDATE project SET status = ?::project_status WHERE id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, status.name());
+                pstmt.setObject(2, projectId);
                 pstmt.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
+
+
 
 
         @Override

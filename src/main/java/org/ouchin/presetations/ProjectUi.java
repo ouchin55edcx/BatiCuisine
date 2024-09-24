@@ -1,13 +1,15 @@
 package org.ouchin.presetations;
 
+import org.ouchin.enums.ProjectStatus;
 import org.ouchin.models.Client;
+import org.ouchin.models.Estimate;
 import org.ouchin.models.Project;
 import org.ouchin.models.WorkForce;
 import org.ouchin.services.EstimateService;
 import org.ouchin.services.ProjectService;
 
-import java.security.KeyStore;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -34,8 +36,6 @@ public class ProjectUi {
         Double profitMargin = getProfitMarginInput();
         Project createdProject = projectService.addProject(client.getId(), projectName, profitMargin);
 
-        // System.out.println("Project created with ID: " + id + " and status: " + status);
-
         System.out.println("Do you want to add some materiels: ");
         if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
             materialUi.addMaterialsToProject(createdProject.getId());
@@ -49,17 +49,13 @@ public class ProjectUi {
 
         workForceUi.showWorkForceByProjectId(createdProject.getId());
         materialUi.showMaterialsByProjectId(createdProject.getId());
-        System.out.println("here is the total " + total);
+        System.out.println("The total estimated cost is: " + total);
+
 
         System.out.println("Do you want to save this estimate? (y/n): ");
         if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
             saveEstimateWithTotal(createdProject.getId(), total.floatValue());
         }
-
-
-
-        //Todo : display all project details with client info
-        //Todo : with metreal component and cout total for it / and workforce component with cout total for it
 
         System.out.println("Project created successfully!");
     }
@@ -108,7 +104,7 @@ public class ProjectUi {
     }
 
 
-    private void updateProject(List<Project> projects) {
+    private void updateProjectStatus(List<Project> projects) {
         System.out.print("Enter the ID of the project to update: ");
         UUID projectId = UUID.fromString(scanner.nextLine().trim());
 
@@ -122,49 +118,62 @@ public class ProjectUi {
             return;
         }
 
-        System.out.print("Enter new project name (press enter to keep current): ");
-        String newName = scanner.nextLine().trim();
-        if (!newName.isEmpty()) {
-            projectToUpdate.setProjectName(newName);
-        }
+        // Display available project statuses
+        System.out.print("Enter new project status (" +
+                Arrays.toString(ProjectStatus.values()) + "): ");
+        String newStatus = scanner.nextLine().trim();
 
-        System.out.print("Enter new profit margin (press enter to keep current): ");
-        String newMargin = scanner.nextLine().trim();
-        if (!newMargin.isEmpty()) {
-            projectToUpdate.setProfitMargin(Double.parseDouble(newMargin));
-        }
+        try {
+            // Convert input to ProjectStatus enum
+            ProjectStatus updatedStatus = ProjectStatus.valueOf(newStatus.toUpperCase());
 
-        projectService.updateProject(projectToUpdate);
-        System.out.println("Project updated successfully.");
+            // Call service to update the project status
+            projectService.updateProjectStatus(projectId, updatedStatus);
+
+            System.out.println("Project status updated successfully.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid status. Project status unchanged.");
+        }
     }
+
 
     public void displayProjectsForClient(UUID clientId) {
         List<Project> projects = projectService.getProjectsForClient(clientId);
+
         if (projects.isEmpty()) {
             System.out.println("No projects found for this client.");
         } else {
             System.out.println("Projects for client " + clientId + ":");
             for (Project project : projects) {
-                System.out.println(project);
+                // Assuming Project class has appropriate getter methods
+                System.out.println("id: " + project.getId());
+                System.out.println("Project Name: " + project.getProjectName());
+                System.out.println("Profit Margin: " + project.getProfitMargin());
+                System.out.println("Status: " + project.getStatus());
+                System.out.println("-----------------------------------");
             }
             handleProjectOperations(projects);
-
         }
     }
+
 
     private void handleProjectOperations(List<Project> projects) {
         while (true) {
             System.out.println("\n--- Project Operations ---");
             System.out.println("1. Update a project");
             System.out.println("2. Delete a project");
+            System.out.println("3. Get estimate by project ID");
             System.out.println("0. Return to main menu");
             System.out.print("Enter your choice: ");
 
             int choice = Integer.parseInt(scanner.nextLine().trim());
 
             switch (choice) {
-                case 1 -> updateProject(projects);
+                case 1 -> updateProjectStatus(projects);
                 case 2 -> deleteProject(projects);
+                case 3 -> getEstimateByProjectId(projects);
+
+
 
                 case 0 -> {
                     return;
@@ -173,6 +182,7 @@ public class ProjectUi {
             }
         }
     }
+
 
     private void deleteProject(List<Project> projects) {
         System.out.print("Enter the ID of the project to delete: ");
@@ -197,4 +207,62 @@ public class ProjectUi {
             System.out.println("Delete operation cancelled.");
         }
     }
-}
+
+
+    private void getEstimateByProjectId(List<Project> projects) {
+        System.out.print("Enter the ID of the project: ");
+        UUID projectId = UUID.fromString(scanner.nextLine().trim());
+
+        Project project = projects.stream()
+                .filter(p -> p.getId().equals(projectId))
+                .findFirst()
+                .orElse(null);
+
+        if (project == null) {
+            System.out.println("Project not found.");
+            return;
+        }
+
+        Estimate estimate = estimateService.getEstimateByProjectId(projectId);
+        if (estimate == null) {
+            System.out.println("Materials for the project:");
+            materialUi.showMaterialsByProjectId(project.getId());
+
+            System.out.println("Workforce for the project:");
+            workForceUi.showWorkForceByProjectId(project.getId());
+            System.out.println("No estimate found for the project.");
+            System.out.println("Do you want to create a new estimate? (y/n)");
+            if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+                Double total = projectService.getTotal(project.getId());
+                saveEstimateWithTotal(project.getId(), total.floatValue());
+            }
+        } else {
+            System.out.println("Estimate for project " + project.getProjectName() + ":");
+            System.out.println("Estimated Amount: " + estimate.getEstimatedAmount());
+            System.out.println("Issue Date: " + estimate.getIssueDate());
+            System.out.println("Validity Date: " + estimate.getValidityDate());
+            System.out.println("Is Accepted: " + estimate.isAccepted());
+
+            System.out.println("Materials for the project:");
+            materialUi.showMaterialsByProjectId(project.getId());
+
+            System.out.println("Workforce for the project:");
+            workForceUi.showWorkForceByProjectId(project.getId());
+
+            System.out.println("\nDo you want to update the acceptance status of this estimate? (y/n)");
+            if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+                updateEstimateAcceptance(project.getId(), estimate);
+            } else {
+                System.out.println("Returning to main menu.");
+            }
+        }
+    }
+
+    private void updateEstimateAcceptance(UUID projectId, Estimate estimate) {
+        System.out.print("Enter the new acceptance status (true/false): ");
+        boolean newAcceptanceStatus = Boolean.parseBoolean(scanner.nextLine().trim());
+
+        estimateService.updateEstimateAcceptance(projectId, newAcceptanceStatus);
+
+        System.out.println("Estimate acceptance status updated successfully.");
+    }}

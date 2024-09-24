@@ -39,23 +39,17 @@ public class   ProjectService {
         return projectRepository.getByClientId(clientId);
     }
 
-    public void updateProject(Project project) {
-        projectRepository.update(project);
+    public void updateProjectStatus(UUID projectId, ProjectStatus newStatus) {
+        projectRepository.updateStatus(projectId, newStatus);
     }
 
     public void deleteProject(UUID projectId) {
         projectRepository.delete(projectId);
     }
 
-//    public List<Material> getMaterialComponentsForProject(UUID projectId) {
-//        return materielRepository.getMaterialComponentsByProjectId(projectId);
-//    }
-//
-//    public List<WorkForce> getWorkforceComponentsForProject(UUID projectId) {
-//        return wo.getWorkforceComponentsByProjectId(projectId);
-//    }
 
     public Double getTotal(UUID id) {
         return materialService.calculateTotalOfMaterials(id) + workForceRepository.calculateTotalOfWorkforce(id);
     }
+
 }
