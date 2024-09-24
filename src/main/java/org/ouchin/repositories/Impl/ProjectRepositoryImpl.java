@@ -1,8 +1,12 @@
     package org.ouchin.repositories.Impl;
 
     import org.ouchin.config.DatabaseConfig;
+    import org.ouchin.enums.ComponentType;
     import org.ouchin.enums.ProjectStatus;
+    import org.ouchin.models.Component;
+    import org.ouchin.models.Material;
     import org.ouchin.models.Project;
+    import org.ouchin.models.WorkForce;
     import org.ouchin.repositories.ProjectRepository;
 
     import java.sql.*;

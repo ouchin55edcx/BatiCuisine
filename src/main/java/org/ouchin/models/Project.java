@@ -77,19 +77,7 @@ public class Project {
         this.components.add(component);
     }
 
-    public float calculateCoutTotal() {
-        float total = 0;
-        for (Component component : components) {
-            if (component instanceof Material) {
-                Material material = (Material) component;
-                total += material.getUnitCost() * material.getQuantity() + material.getTransportCost();
-            } else if (component instanceof WorkForce) {
-                WorkForce workForce = (WorkForce) component;
-                total += workForce.getHourlyRate() * workForce.getWorkHours();
-            }
-        }
-        return total;
-    }
+
 
     @Override
     public String toString() {

@@ -3,9 +3,11 @@ package org.ouchin.presetations;
 import org.ouchin.models.Client;
 import org.ouchin.models.Project;
 import org.ouchin.models.WorkForce;
+import org.ouchin.services.EstimateService;
 import org.ouchin.services.ProjectService;
 
 import java.security.KeyStore;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -14,12 +16,15 @@ public class ProjectUi {
     private final ProjectService projectService;
     private final MaterialUi materialUi;
     private final WorkForceUi workForceUi;
+    private final EstimateService estimateService;
+
     private final Scanner scanner = new Scanner(System.in);
 
-    public ProjectUi(ProjectService projectService, MaterialUi materialUi, WorkForceUi workForceUi) {
+    public ProjectUi(ProjectService projectService, MaterialUi materialUi, WorkForceUi workForceUi, EstimateService estimateService) {
         this.projectService = projectService;
         this.materialUi = materialUi;
         this.workForceUi = workForceUi;
+        this.estimateService = estimateService;
     }
 
     public void createProjectForClient(Client client) {
@@ -40,8 +45,39 @@ public class ProjectUi {
         if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
             workForceUi.addWorkForceToProject(createdProject.getId());
         }
+        Double total = projectService.getTotal(createdProject.getId());
+        System.out.println("here is the total " + total);
 
+        // Ask if the user wants to save the estimate with the total amount
+        System.out.println("Do you want to save this estimate? (y/n): ");
+        if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            saveEstimateWithTotal(createdProject.getId(), total.floatValue());
+        }
+
+        //Todo : display all project details with client info
+        //Todo :
         System.out.println("Project created successfully!");
+    }
+
+    private void saveEstimateWithTotal(UUID projectId, float totalAmount) {
+        System.out.println("Saving estimate for project ID: " + projectId);
+
+        // Input for issue date
+        System.out.println("Enter the issue date (yyyy-MM-dd):");
+        LocalDate issueDate = LocalDate.parse(scanner.nextLine().trim());
+
+        // Input for validity date
+        System.out.println("Enter the validity date (yyyy-MM-dd):");
+        LocalDate validityDate = LocalDate.parse(scanner.nextLine().trim());
+
+        // Optionally accept or reject the estimate
+        System.out.println("Is the estimate accepted? (y/n): ");
+        boolean isAccepted = scanner.nextLine().trim().equalsIgnoreCase("y");
+
+        // Pass the values to the service to save the estimate
+        estimateService.saveEstimateWithTotal(projectId, totalAmount, issueDate, validityDate, isAccepted);
+
+        System.out.println("Estimate saved with a total amount of: " + totalAmount);
     }
 
     private String getProjectNameInput() {
@@ -69,8 +105,6 @@ public class ProjectUi {
         }
 
     }
-
-
 
 
     private void updateProject(List<Project> projects) {

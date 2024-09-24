@@ -57,8 +57,11 @@ public class Material extends Component {
     }
 
 
+//todo : add method to calculate the cost of one component
 
 
-
-
+    @Override
+    public Double total() {
+        return unitCost * quantity * qualityCoefficient + transportCost;
+    }
 }
